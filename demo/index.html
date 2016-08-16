@@ -1,0 +1,42 @@
+<!doctype html>
+<html>
+  <head>
+    <title>l47-datetime-picker demo</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, minimum-scale=1.0, initial-scale=1, user-scalable=yes">
+    <script src="../../webcomponentsjs/webcomponents-lite.js"></script>
+
+    <link rel="import" href="../../iron-demo-helpers/demo-pages-shared-styles.html">
+    <link rel="import" href="../../iron-demo-helpers/demo-snippet.html">
+
+    <link rel="import" href="../l47-datetime-picker.html">
+
+    <style is="custom-style" include="demo-pages-shared-styles">
+    </style>
+  </head>
+  <body unresolved>
+
+    <div class="vertical-section-container centered" style="max-width:540px;">
+      <h3>Basic l47-datetime-picker Demo</h3>
+      <demo-snippet>
+        <template is="dom-bind" id="scope">
+          <h3>{{date}}</h3>
+          <h3>{{time}}</h3>
+          <l47-datetime-picker id="picker" date="{{date}}" time="{{time}}" on-date-changed="showTimePicker" on-time-changed="showDatePicker"></l47-datetime-picker>
+        </template>
+      </demo-snippet>
+    </div>
+
+    <script>
+      var scope = document.querySelector('#scope');
+
+      scope.showTimePicker = function() {
+        this.$.picker.showTimePicker();
+      };
+
+      scope.showDatePicker = function() {
+        this.$.picker.showDatePicker();
+      };
+    </script>
+  </body>
+</html>

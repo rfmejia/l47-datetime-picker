@@ -1,0 +1,100 @@
+<link rel="import" href="../polymer/polymer.html">
+<link rel="import" href="../neon-animation/neon-animated-pages.html">
+<link rel="import" href="../neon-animation/neon-animatable.html">
+<link rel="import" href="../neon-animation/animations/fade-in-animation.html">
+<link rel="import" href="../neon-animation/animations/fade-out-animation.html">
+<link rel="import" href="../paper-button/paper-button.html">
+<link rel="import" href="../paper-date-picker/paper-date-picker.html">
+<link rel="import" href="../paper-time-picker/paper-time-picker.html">
+
+<!--
+`l47-datetime-picker`
+Two-step datetime picker
+
+@demo demo/index.html 
+-->
+
+<dom-module id="l47-datetime-picker">
+  <template>
+    <style>
+      :host {
+        display: block;
+        min-height: 248px;
+      }
+      #pages {
+        @apply(--layout-flex);
+        width: auto;
+        background: var(--default-background-color);
+      }
+    </style>
+
+    <neon-animated-pages id="pages" selected="{{_selectedPage}}" attr-for-selected="id"
+        entry-animation="fade-in-animation" exit-animation="fade-out-animation" 
+        on-iron-select="_pageSelected">
+      <neon-animatable id="chooseDate">
+        <paper-date-picker id="datePicker" date="{{date}}"></paper-date-picker>
+      </neon-animatable>
+      <neon-animatable id="chooseTime">
+        <paper-time-picker id="timePicker" time="{{time}}"></paper-time-picker>
+      </neon-animatable>
+    </neon-animated-pages>
+
+  </template>
+
+  <script>
+    Polymer({
+
+      is: 'l47-datetime-picker',
+
+      properties: {
+        /**
+          * The selected date
+          */
+        date: {
+          type: Date,
+          notify: true
+        },
+
+        time: {
+          type: String,
+          notify: true
+        },
+
+        _selectedPage: String,
+
+      },
+
+      ready: function() {
+        this._selectPage('chooseDate');
+      },
+
+      showDatePicker: function() {
+        this._selectedPage = 'chooseDate';
+      },
+
+      showTimePicker: function() {
+        this._selectedPage = 'chooseTime';
+      },
+
+      resizeContainer: function() {
+        if (this._selectedPage === 'chooseDate') {
+          if (this.$.datePicker.narrow) this.style.height = "428px";
+          else this.style.height = "248px";
+        }
+        else if (this._selectedPage === 'chooseTime') {
+          if (this.$.datePicker.narrow) this.style.height = "428px";
+          else this.style.height = "304px";
+        }
+      },
+
+      _selectPage: function(page) {
+        this.$.pages.selected = page;
+      },
+
+      _pageSelected: function() {
+        this.resizeContainer();
+      },
+
+    });
+  </script>
+</dom-module>
