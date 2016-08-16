@@ -1,6 +1,6 @@
 # \<l47-datetime-picker\>
 
-Two-step datetime picker
+Two-step datetime picker. Credit goes to [Ben Davis](https://github.com/bendavis78) for [paper-date-picker](https://github.com/bendavis78/paper-date-picker) and [paper-time-picker](https://github.com/bendavis78/paper-time-picker).
 
 ## Install the Polymer-CLI
 
