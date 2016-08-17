@@ -76,14 +76,29 @@ Two-step datetime picker
         this._selectedPage = 'chooseTime';
       },
 
+      /**
+        * Change the width and height of the host container
+        */
       resizeContainer: function() {
         if (this._selectedPage === 'chooseDate') {
-          if (this.$.datePicker.narrow) this.style.height = "428px";
-          else this.style.height = "248px";
+          if (this.$.datePicker.narrow) {
+            this.style.width = "328px";
+            this.style.height = "428px";
+          }
+          else {
+            this.style.width = "512px";
+            this.style.height = "248px";
+          }
         }
         else if (this._selectedPage === 'chooseTime') {
-          if (this.$.datePicker.narrow) this.style.height = "428px";
-          else this.style.height = "304px";
+          if (this.$.timePicker.narrow) {
+            this.style.width = "328px";
+            this.style.height = "428px";
+          }
+          else {
+            this.style.width = "512px";
+            this.style.height = "304px";
+          }
         }
       },
 
