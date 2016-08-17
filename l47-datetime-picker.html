@@ -77,6 +77,14 @@ Two-step datetime picker
       },
 
       /**
+        * Set date and time using a moment.js object
+        */
+      setMoment: function(momentDatetime) {
+        this.date = momentDatetime.toDate();
+        this.time = momentDatetime.format('h:mm');
+      },
+
+      /**
         * Change the width and height of the host container
         */
       resizeContainer: function() {
