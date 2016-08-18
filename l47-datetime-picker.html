@@ -30,12 +30,12 @@ Two-step datetime picker
 
     <neon-animated-pages id="pages" selected="{{_selectedPage}}" attr-for-selected="id"
         entry-animation="fade-in-animation" exit-animation="fade-out-animation" 
-        on-iron-select="_pageSelected">
+        on-iron-select="resizeContainer">
       <neon-animatable id="chooseDate">
-        <paper-date-picker id="datePicker" date="{{date}}"></paper-date-picker>
+        <paper-date-picker id="datePicker" date="{{_date}}" xon-date-changed="_internalDateTimeChanged"></paper-date-picker>
       </neon-animatable>
       <neon-animatable id="chooseTime">
-        <paper-time-picker id="timePicker" time="{{time}}"></paper-time-picker>
+        <paper-time-picker id="timePicker" time="{{_time}}" xon-time-changed="_internalDateTimeChanged"></paper-time-picker>
       </neon-animatable>
     </neon-animated-pages>
 
@@ -48,45 +48,102 @@ Two-step datetime picker
 
       properties: {
         /**
-          * The selected date
+          * The selected date and time as a Moment object. This object does not auto-update changes; call
+          * `updateMomentDatetime() to propagate changes`.
           */
-        date: {
-          type: Date,
-          notify: true
+        momentDatetime: {
+          type: Object,
+          notify: true,
+          observer: '_momentDatetimeChanged'
         },
 
+        /** Javascript Date representation of date */
+        date: {
+          type: Date,
+          notify: true,
+          readOnly: true,
+        },
+
+        /** 12-hour string representation of time in 'h:mma' format (e.g.; 4:09pm) */
         time: {
           type: String,
-          notify: true
+          notify: true,
+          readOnly: true,
+        },
+
+        /** Internal representation of date picker value */
+        _date: {
+          type: Date,
+          observer: '_internalDateTimeChanged'
+        },
+
+        /** Internal representation of time picker value */
+        _time: {
+          type: String,
+          observer: '_internalDateTimeChanged'
         },
 
         _selectedPage: String,
 
+        /** Mutex for propagation of outward changes */
+        _valuePropagating: {
+          type: Boolean,
+          value: false,
+        },
       },
 
       ready: function() {
         this._selectPage('chooseDate');
       },
 
+      /** Change view to date picker */
       showDatePicker: function() {
         this._selectedPage = 'chooseDate';
       },
 
+      /** Change view to time picker. */
       showTimePicker: function() {
         this._selectedPage = 'chooseTime';
       },
-
-      /**
-        * Set date and time using a moment.js object
-        */
-      setMoment: function(momentDatetime) {
-        this.date = momentDatetime.toDate();
-        this.time = momentDatetime.format('h:mm');
+      
+      /** Set external date and time based on Moment.js object */
+      _momentDatetimeChanged: function(newValue) {
+        if (!this._valuePropagating) {
+          this._setDate(newValue.toDate());
+          this._setTime(newValue.format('h:mma'));
+          this._propagateChanges();
+        }
       },
 
-      /**
-        * Change the width and height of the host container
-        */
+      /** Set external date and time based on internal representations */
+      _internalDateTimeChanged: function() {
+        if (!this._valuePropagating) {
+          this._setDate(this._date);
+          this._setTime(this._time);
+          this._propagateChanges();
+        }
+      },
+
+      /** Set Moment.js and internal representations based on external representation */
+      _propagateChanges: function() {
+        if (!this._valuePropagating) {
+          this._valuePropagating = true;
+
+          if (this.date && this.time) {
+            this.momentDatetime = moment(this.time, 'h:mma')
+              .year(this.date.getFullYear())
+              .month(this.date.getMonth())
+              .date(this.date.getDate());
+          }
+
+          this._date = this.date;
+          this._time = this.time;
+
+          this._valuePropagating = false;
+        }
+      },
+
+      /** Change the width and height of the host container */
       resizeContainer: function() {
         if (this._selectedPage === 'chooseDate') {
           if (this.$.datePicker.narrow) {
@@ -112,10 +169,6 @@ Two-step datetime picker
 
       _selectPage: function(page) {
         this.$.pages.selected = page;
-      },
-
-      _pageSelected: function() {
-        this.resizeContainer();
       },
 
     });

@@ -8,6 +8,8 @@
 
     <link rel="import" href="../../iron-demo-helpers/demo-pages-shared-styles.html">
     <link rel="import" href="../../iron-demo-helpers/demo-snippet.html">
+    
+    <link rel="import" href="../../paper-button/paper-button.html">
 
     <link rel="import" href="../l47-datetime-picker.html">
 
@@ -20,23 +22,35 @@
       <h3>Basic l47-datetime-picker Demo</h3>
       <demo-snippet>
         <template is="dom-bind" id="scope">
-          <h3>{{date}}</h3>
-          <h3>{{time}}</h3>
-          <l47-datetime-picker id="picker" date="{{date}}" time="{{time}}" on-date-changed="showTimePicker" on-time-changed="showDatePicker"></l47-datetime-picker>
+          <h3>{{datetime}}</h3>
+          <l47-datetime-picker id="picker" moment-datetime="{{datetime}}"></l47-datetime-picker>
+          <paper-button on-tap="showTimePicker" hidden="{{!dateShown}}">Change time</paper-button>
+          <paper-button on-tap="showDatePicker" hidden="{{dateShown}}">Change date</paper-button>
         </template>
       </demo-snippet>
     </div>
 
     <script>
-      var scope = document.querySelector('#scope');
+      HTMLImports.whenReady(function() {
+        var scope = document.querySelector('#scope');
 
-      scope.showTimePicker = function() {
-        this.$.picker.showTimePicker();
-      };
+        scope.dateShown = true;
 
-      scope.showDatePicker = function() {
-        this.$.picker.showDatePicker();
-      };
+        scope.showTimePicker = function() {
+          this.$.picker.showTimePicker();
+          this.dateShown = false;
+        };
+
+        scope.showDatePicker = function() {
+          this.$.picker.showDatePicker();
+          this.dateShown = true;
+        };
+
+        document.addEventListener('WebComponentsReady', function() {
+          scope.datetime = moment();
+        });
+
+      });
     </script>
   </body>
 </html>
