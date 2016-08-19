@@ -32,10 +32,10 @@ Two-step datetime picker
         entry-animation="fade-in-animation" exit-animation="fade-out-animation" 
         on-iron-select="resizeContainer">
       <neon-animatable id="chooseDate">
-        <paper-date-picker id="datePicker" date="{{_date}}" xon-date-changed="_internalDateTimeChanged"></paper-date-picker>
+        <paper-date-picker id="datePicker" date="{{_date}}" xon-date-changed="_internalDateChanged"></paper-date-picker>
       </neon-animatable>
       <neon-animatable id="chooseTime">
-        <paper-time-picker id="timePicker" time="{{_time}}" xon-time-changed="_internalDateTimeChanged"></paper-time-picker>
+        <paper-time-picker id="timePicker" time="{{_time}}" xon-time-changed="_internalTimeChanged"></paper-time-picker>
       </neon-animatable>
     </neon-animated-pages>
 
@@ -108,7 +108,7 @@ Two-step datetime picker
       
       /** Set external date and time based on Moment.js object */
       _momentDatetimeChanged: function(newValue) {
-        if (!this._valuePropagating) {
+        if (newValue && !this._valuePropagating) {
           this._setDate(newValue.toDate());
           this._setTime(newValue.format('h:mma'));
           this._propagateChanges();
@@ -116,9 +116,16 @@ Two-step datetime picker
       },
 
       /** Set external date and time based on internal representations */
-      _internalDateTimeChanged: function() {
-        if (!this._valuePropagating) {
+      _internalDateChanged: function() {
+        if (this._date && !this._valuePropagating) {
           this._setDate(this._date);
+          this._propagateChanges();
+        }
+      },
+
+      /** Set external date and time based on internal representations */
+      _internalTimeChanged: function() {
+        if (this._time && !this._valuePropagating) {
           this._setTime(this._time);
           this._propagateChanges();
         }
