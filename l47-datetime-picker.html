@@ -32,10 +32,10 @@ Two-step datetime picker
         entry-animation="fade-in-animation" exit-animation="fade-out-animation" 
         on-iron-select="resizeContainer">
       <neon-animatable id="chooseDate">
-        <paper-date-picker id="datePicker" date="{{_date}}" xon-date-changed="_internalDateChanged"></paper-date-picker>
+        <paper-date-picker id="datePicker" date="{{_date}}"></paper-date-picker>
       </neon-animatable>
       <neon-animatable id="chooseTime">
-        <paper-time-picker id="timePicker" time="{{_time}}" xon-time-changed="_internalTimeChanged"></paper-time-picker>
+        <paper-time-picker id="timePicker" time="{{_time}}"></paper-time-picker>
       </neon-animatable>
     </neon-animated-pages>
 
@@ -74,13 +74,13 @@ Two-step datetime picker
         /** Internal representation of date picker value */
         _date: {
           type: Date,
-          observer: '_internalDateTimeChanged'
+          observer: '_internalDateChanged'
         },
 
         /** Internal representation of time picker value */
         _time: {
           type: String,
-          observer: '_internalDateTimeChanged'
+          observer: '_internalTimeChanged'
         },
 
         _selectedPage: String,
